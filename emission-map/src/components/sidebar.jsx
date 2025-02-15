@@ -3,7 +3,7 @@ import './sidebar.css'; // You can customize the CSS
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
-const Sidebar = ({ routesData }) => {
+const Sidebar = ({ stepData }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [className, setClassName] = useState('sidebar')
 
@@ -28,18 +28,21 @@ const Sidebar = ({ routesData }) => {
         <div className="sidebar_icon" onClick={handleSidebarClose}>
           <FontAwesomeIcon icon={faBars} />
         </div>
-          <h2>Carbon Emissions</h2>
-          {/* {routesData.length === 0 ? (
+          <h2>Steps</h2>
+          {stepData.length === 0 ? (
             <p>Select a destination to see routes.</p>
           ) : (
-            routesData.map((route, index) => (
-              <div key={index} className="route">
-                <h3>{route.transportMode}</h3>
-                <p>Distance: {route.distance} miles</p>
-                <p>Carbon Emissions: {route.carbonEmissions} kg CO₂</p>
-              </div>
+            // setData.map((route, index) => (
+            //   <div key={index} className="route">
+            //     <h3>{route.transportMode}</h3>
+            //     <p>Distance: {route.distance} miles</p>
+            //     <p>Carbon Emissions: {route.carbonEmissions} kg CO₂</p>
+            //   </div>
+            // ))
+            stepData.map((step, index) => (
+              <li>{step.maneuver.instruction}</li>
             ))
-          )} */}
+          )}
         </>
       )}
     </div>

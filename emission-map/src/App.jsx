@@ -18,8 +18,8 @@ function App() {
 
   //for sidebar
   const [destination, setDestination] = useState(null);
-  const [routesData, setRoutesData] = useState([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [steps, setSteps] = useState('');
+
 
   const mapRef = useRef()
   const mapContainerRef = useRef()
@@ -66,6 +66,64 @@ function App() {
     setEndCoords(data.features[0].geometry.coordinates)
   }
 
+  const handleDemo = async() => {
+
+    const start = [-73.935242, 40.730610];  // Default starting point (NYC center)
+    const end = [-73.963402, 40.779434];  // met
+
+    try {const response = await fetch(
+      `https://api.mapbox.com/directions/v5/mapbox/driving-traffic/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=pk.eyJ1IjoiZGFuZ2IyNCIsImEiOiJjbTc2amR0NXIwdXphMmxwcnZtanprZXZzIn0.heEc3MDcr2E2grB7VXRKgw`
+    );
+    const data = await response.json();
+    const route = data.routes[0].geometry.coordinates;
+    const stepdata = data.routes[0].legs[0].steps;
+
+    setSteps(stepdata);
+
+    // Clear previous route (if any)
+    if (mapRef.current.getSource('route')) {
+      mapRef.current.removeLayer('route');
+      mapRef.current.removeSource('route');
+    }
+
+    // Display the new route
+    mapRef.current.addSource('route', {
+      type: 'geojson',
+      data: {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: route,
+        },
+      },
+    });
+
+    mapRef.current.addLayer({
+      id: 'route',
+      type: 'line',
+      source: 'route',
+      paint: {
+        'line-color': '#3887be',
+        'line-width': 5,
+      },
+    });
+
+    // Optionally, add a marker for the destination
+    new mapboxgl.Marker().setLngLat(end).addTo(mapRef.current);
+
+    mapRef.current.fitBounds(
+      [start, end], 
+      { padding: 100, maxZoom: 15 }
+    );
+
+    
+  } catch (error) {
+    console.error('Error fetching the directions:', error);
+  }
+
+  }
+
+
 	return (
 		<>
 
@@ -75,6 +133,10 @@ function App() {
       <button className="reset-button" onClick={handleReset}>
         Reset
       </button>
+      <button className='demo-button' onClick={handleDemo}>
+        Demo
+      </button>
+      <Sidebar stepData={steps} />
       <div className="search-box-container">
         <SearchBox
           accessToken="pk.eyJ1IjoiZGFuZ2IyNCIsImEiOiJjbTc2amR0NXIwdXphMmxwcnZtanprZXZzIn0.heEc3MDcr2E2grB7VXRKgw"
@@ -92,9 +154,7 @@ function App() {
           marker
         />
       </div>
-			<div id="map-container" ref={mapContainerRef}>
-        <Sidebar routesData={routesData} />
-      </div>
+			<div id="map-container" ref={mapContainerRef}/>
 		</>
 	);
 }

@@ -21,7 +21,7 @@
   z-index: 1;
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   margin: 12px;
   border-radius: 4px;
 }
@@ -30,7 +30,7 @@
   position: absolute;
   top: 50px;
   z-index: 1;
-  left: 12px;
+  right: 12px;
   padding: 4px 10px;
   border-radius: 10px;
   cursor: pointer;

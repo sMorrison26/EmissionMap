@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css';
+import SearchBar from "./components/searchbar";
 import "./App.css";
 
 const INITIAL_CENTER = [-73.935242, 40.730610]
@@ -48,13 +49,16 @@ function App() {
 
 	return (
 		<>
+      <SearchBar />
       <div className="sidebar">
         Longitude: {center[0].toFixed(4)} | Latitude: {center[1].toFixed(4)} | Zoom: {zoom.toFixed(2)}
       </div>
       <button className='reset-button' onClick={handleReset}>
         Reset
       </button>
+      
 			<div id="map-container" ref={mapContainerRef} />
+      
 		</>
 	);
 }

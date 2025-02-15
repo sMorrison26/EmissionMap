@@ -56,19 +56,15 @@ function App() {
 	return (
 		<>
       <SearchBar />
-      <div className="sidebar">
+      <div className="coordbar">
         Longitude: {center[0].toFixed(4)} | Latitude: {center[1].toFixed(4)} | Zoom: {zoom.toFixed(2)}
       </div>
       <button className='reset-button' onClick={handleReset}>
         Reset
       </button>
     
-      
 			<div id="map-container" ref={mapContainerRef}>
-        <Sidebar 
-          routesData={routesData} 
-          // onClose={() => setSidebarOpen(false)} 
-        />
+        <Sidebar routesData={routesData} />
       </div>
 		</>
 	);

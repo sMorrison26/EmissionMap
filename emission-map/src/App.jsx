@@ -4,6 +4,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { SearchBox } from "@mapbox/search-js-react";
 import SearchBar from "./components/searchbar";
 import "./App.css";
+import Sidebar from './components/sidebar';
 
 const INITIAL_CENTER = [-73.935242, 40.73061];
 const INITIAL_ZOOM = 10.12;
@@ -15,8 +16,13 @@ function App() {
   const [inputValue, setInputValue] = useState("");
   const [endCoords, setEndCoords] = useState();
 
-	const mapRef = useRef();
-	const mapContainerRef = useRef();
+  //for sidebar
+  const [destination, setDestination] = useState(null);
+  const [routesData, setRoutesData] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const mapRef = useRef()
+  const mapContainerRef = useRef()
 
 	useEffect(() => {
 		mapboxgl.accessToken = "pk.eyJ1IjoiZGFuZ2IyNCIsImEiOiJjbTc2amR0NXIwdXphMmxwcnZtanprZXZzIn0.heEc3MDcr2E2grB7VXRKgw";
@@ -60,11 +66,11 @@ function App() {
     setEndCoords(data.features[0].geometry.coordinates)
   }
 
-  return (
-    <>
-      <div className="sidebar">
-        Longitude: {center[0].toFixed(4)} | Latitude: {center[1].toFixed(4)} |
-        Zoom: {zoom.toFixed(2)}
+	return (
+		<>
+
+      <div className="coordbar">
+        Longitude: {center[0].toFixed(4)} | Latitude: {center[1].toFixed(4)} | Zoom: {zoom.toFixed(2)}
       </div>
       <button className="reset-button" onClick={handleReset}>
         Reset
@@ -86,9 +92,11 @@ function App() {
           marker
         />
       </div>
-      <div id="map-container" ref={mapContainerRef} />
-    </>
-  );
+			<div id="map-container" ref={mapContainerRef}>
+        <Sidebar routesData={routesData} />
+      </div>
+		</>
+	);
 }
 
 

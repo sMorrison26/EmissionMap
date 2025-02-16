@@ -362,6 +362,10 @@ function App() {
 					options={{
 						language: "en",
 						country: "US",
+						proximity: {
+							lng: center[0],
+							lat: center[1],
+						},
 					}}
 					onRetrieve={handleRetrieve}
 					marker

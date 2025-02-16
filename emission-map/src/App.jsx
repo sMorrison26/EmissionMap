@@ -47,6 +47,8 @@ function App() {
 			setZoom(mapZoom);
 		});
 
+    collectUserCoordinates();
+
 		return () => {
 			mapRef.current.remove();
 		};
@@ -59,16 +61,40 @@ function App() {
 		});
 	};
 
+  //collect user coordinates
+  const collectUserCoordinates = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userCoords = [position.coords.longitude, position.coords.latitude];
+          setCenter(userCoords);
+          mapRef.current.flyTo({
+            center: userCoords,
+            zoom: INITIAL_ZOOM,
+          });
+        },
+        (error) => {
+          console.error("Error retrieving user coordinates:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  };
 	//collect the coordinates once the user clicks on their choice from the search bar
 	const handleRetrieve = (data) => {
-		// console.log("data",data);
-		// console.log("coords:",data.features[0].geometry.coordinates)
+		console.log("data",data);
+		console.log("coords:",data.features[0].geometry.coordinates)
 		setEndCoords(data.features[0].geometry.coordinates);
+    handleDemo(data.features[0].geometry.coordinates);
 	};
 
-	const handleDemo = async () => {
-		const start = [-73.935242, 40.73061]; // Default starting point (NYC center)
-		const end = [-73.963402, 40.779434]; // met
+	const handleDemo = async (endCoordinates) => {
+		const start = center; // Default starting point (NYC center)
+		const end = endCoordinates; // met
+
+    console.log('Starting: ', start)
+    console.log('Ending: ',end)
 
 		try {
 			const response = await fetch(

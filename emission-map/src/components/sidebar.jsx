@@ -40,7 +40,7 @@ const renderTransportationData = (
 					{mode.charAt(0).toUpperCase() + mode.slice(1)} -{" "}
 					{Math.round(stepsData.routes[0].legs[0].duration / 60)} min,{" "}
 					{Math.round(stepsData.routes[0].legs[0].distance * 0.000621371 * 10) /
-						10}
+						10} mi
 				</h3>
 				<FontAwesomeIcon icon={icon} className="data-icon" />
 			</div>

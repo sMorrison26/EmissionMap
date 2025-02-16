@@ -62,9 +62,9 @@ const Sidebar = ({ stepData }) => {
 	const [showTransit, setShowTransit] = useState(false);
 
   const emissionColor = (emission) => {
-    if (emission < 1000) return "green";
-    if (emission < 3000) return "yellow";
-    return "red";
+    if (emission < 1000) return "#06d6a0";
+    if (emission < 3000) return "#ffd166";
+    return "#ef476f";
   };
 
 

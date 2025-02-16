@@ -28,13 +28,23 @@
 }
 
 .reset-button {
+  background-color:  #f7fff7;
+  color: #073b4c;
+  padding: 6px 12px;
+  font-family: monospace;
   position: absolute;
   bottom: 50px;
   z-index: 1;
   left: 12px;
   padding: 4px 10px;
-  border-radius: 10px;
+  border-radius: 4px;
+  border-color:  #2c3e50;
   cursor: pointer;
+}
+
+.reset-button:hover {
+  color: #f7fff7;
+  background-color: #073b4c;
 }
 
 .search-box-container {
@@ -46,14 +56,34 @@
 }
 
 .demo-button {
+  background-color:#f7fff7 ;
+  color: #073b4c;
+  padding: 6px 12px;
+  font-family: monospace;
   position: absolute;
   bottom: 100px;
   z-index: 1;
   left: 12px;
   padding: 4px 10px;
-  border-radius: 10px;
+  border-radius: 4px;
+  border-color:  #2c3e50;
   cursor: pointer;
 }
+.button {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.button > .data-icon {
+  margin-right: 0.5em;
+  font-size: 1em;
+}
+
+.demo-button:hover {
+  color: #f7fff7;
+  background-color: #073b4c;
+}
+
 
 .top-bar {
   display: flex;

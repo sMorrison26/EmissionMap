@@ -6,6 +6,8 @@ import "./App.css";
 import Sidebar from "./components/sidebar";
 import polyline from '@mapbox/polyline';
 import Papa from 'papaparse';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBicycle, faX } from "@fortawesome/free-solid-svg-icons";
 
 const INITIAL_CENTER = [-73.935242, 40.73061];
 const INITIAL_ZOOM = 12;
@@ -276,10 +278,12 @@ function App() {
             Longitude: {center[0].toFixed(4)} | Latitude: {center[1].toFixed(4)} |
             Zoom: {zoom.toFixed(2)}
           </div>
-          <button className="reset-button" onClick={handleReset}>
+          <button className="reset-button button" onClick={handleReset}>
+           <FontAwesomeIcon icon={faX} className="data-icon" style={{marginRight:'.5em'}}/>
             Reset
           </button>
-          <button className="demo-button" onClick={citiBikeDemo}>
+          <button className="demo-button button" onClick={citiBikeDemo}>
+            <FontAwesomeIcon icon={faBicycle} className="data-icon" />
             Find CitiBikes
           </button>
           <Sidebar stepData={steps} />

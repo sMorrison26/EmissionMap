@@ -346,9 +346,9 @@ function App() {
 			<button className="reset-button" onClick={handleReset}>
 				Reset
 			</button>
-			<button className="demo-button" onClick={handleDemo2}>
+			{/* <button className="demo-button" onClick={handleDemo2}>
 				Demo
-			</button>
+			</button> */}
 			<Sidebar stepData={steps} />
 			<div className="search-box-container">
 				<SearchBox

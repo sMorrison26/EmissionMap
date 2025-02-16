@@ -471,15 +471,15 @@ const Sidebar = ({ stepData }) => {
 					<div>
 						<div>
 							<h3>How to Use</h3>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+							<p>Welcome to GreenRoute!<br />To get started, use the search bar in the top left corner to choose a destination. After that, use the side menu to observe statistics and data for different modes of transport. See the first section for directions on how to get there. See the second section for emission statistics for your trip. You may also use the button in the bottom left corner to find city bikes in your area.<br />Happy Traveling!</p>
 						</div>
 						<div>
 							<h3>Our Mission</h3>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+							<p>Our mission at GreenRoute is to raise awareness over the daily impact of carbon emissions we create when we travel. We hope many people will use this app and we hope we will be of influence to daily commuters. We want to inspire change in this world so we are taking the first step to being the change we want to see.</p>
 						</div>
 						<div>
 							<h3>About Us</h3>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+							<p>Our team is comprised of two developers, Beatrice Dang and Sean Morrison, who are studying Information Technology at Rensselaer Polytechnic Institute.</p>
 						</div>
 					</div>
 				</>

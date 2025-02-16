@@ -17,6 +17,8 @@ const Sidebar = ({ stepData }) => {
 		setClassName("sidebar");
 	};
 
+	console.log("StepData coming in: ", stepData);
+
 	return (
 		<div className={className}>
 			{!sidebarOpen ? (
@@ -32,31 +34,36 @@ const Sidebar = ({ stepData }) => {
 					{!stepData ? (
 						<p>Select a destination to see routes.</p>
 					) : (
-						// setData.map((route, index) => (
-						//   <div key={index} className="route">
-						//     <h3>{route.transportMode}</h3>
-						//     <p>Distance: {route.distance} miles</p>
-						//     <p>Carbon Emissions: {route.carbonEmissions} kg CO₂</p>
-						//   </div>
-						// ))
 						<div>
 							<div id="cardata">
 								<p>Car data</p>
-								{stepData.car.map((step, index) => (
-									<li >{step.maneuver.instruction}</li>
-								))}
+								{stepData.car ? (
+									stepData.car.routes[0].legs[0].steps.map((step, index) => (
+										<li key={index}>{step.maneuver.instruction}</li>
+									))
+								) : (
+									<p>Not here</p>
+								)}
 							</div>
-							<div id="cycledata">
+							<div id="cycle">
 								<p>Cycle data</p>
-								{stepData.cycle.map((step, index) => (
-									<li key={index}>{step.maneuver.instruction}</li>
-								))}
+								{stepData.cycle ? (
+									stepData.cycle.routes[0].legs[0].steps.map((step, index) => (
+										<li key={index}>{step.maneuver.instruction}</li>
+									))
+								) : (
+									<p>Not here</p>
+								)}
 							</div>
 							<div id="walkdata">
 								<p>Walk data</p>
-								{stepData.walk.map((step, index) => (
-									<li key={index}>{step.maneuver.instruction}</li>
-								))}
+								{stepData.walk ? (
+									stepData.walk.routes[0].legs[0].steps.map((step, index) => (
+										<li key={index}>{step.maneuver.instruction}</li>
+									))
+								) : (
+									<p>Not here</p>
+								)}
 							</div>
 						</div>
 					)}

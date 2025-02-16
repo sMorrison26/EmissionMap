@@ -90,7 +90,7 @@ const Sidebar = ({ stepData }) => {
 								setShowSteps(!showSteps);
 							}}
 						/>
-						<h2>Steps</h2>
+						<h2>Directions</h2>
 					</div>
 					{!stepData ? (
 						<p>Select a destination to see routes.</p>
@@ -197,7 +197,7 @@ const Sidebar = ({ stepData }) => {
 									<h3>Driving</h3>
 									<FontAwesomeIcon icon={faCar} className="data-icon" />
 								</div>
-								<hr />
+								<hr style={{borderColor: '#ef476f'}}/>
 								<div hidden={!showDriving}>
                 {stepData.car ? (
                   <ul className="emission-list">
@@ -266,7 +266,7 @@ const Sidebar = ({ stepData }) => {
 									<h3>Cycling</h3>
 									<FontAwesomeIcon icon={faBicycle} className="data-icon" />
 								</div>
-								<hr />
+								<hr style={{borderColor: '#ffd166'}}/>
 								<div hidden={!showCycling}>
 									{stepData.cycle ? (
                     <h4 style={{margin:'0'}}>Cycling produces a negligible carbon output. Click the 'Find CitiBikes' to locate a bike near you!</h4>
@@ -289,7 +289,7 @@ const Sidebar = ({ stepData }) => {
 									<h3>Walking</h3>
 									<FontAwesomeIcon icon={faWalking} className="data-icon" />
 								</div>
-								<hr />
+								<hr style={{borderColor: '#06d6a0'}}/>
 								<div hidden={!showWalking}>
 									{stepData.walk ? (
                     <h4 style={{margin:'0'}}>Walking, like cycling, produces a negligible carbon output. Great for the climate and for your health!</h4>
@@ -312,7 +312,7 @@ const Sidebar = ({ stepData }) => {
 									<h3>Transit</h3>
 									<FontAwesomeIcon icon={faBus} className="data-icon" />
 								</div>
-								<hr />
+								<hr style={{borderColor: '#8338ec'}}/>
 								<div hidden={!showTransit}>
                 {stepData.transit ? (
                     <ul className="emission-list">

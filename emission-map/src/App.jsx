@@ -102,9 +102,9 @@ function App() {
       setSteps({ ...stepTemplate });
   
       const routeConfigs = [
-        { mode: "driving-traffic", color: "#ff0000", key: "car" },
-        { mode: "cycling", color: "#0000ff", key: "cycle" },
-        { mode: "walking", color: "#00ff00", key: "walk" },
+        { mode: "driving-traffic", color: "#ef476f", key: "car" },
+        { mode: "cycling", color: "#ffd166", key: "cycle" },
+        { mode: "walking", color: "#06d6a0", key: "walk" },
       ];
   
       // Function to fetch and process route data
@@ -179,7 +179,7 @@ function App() {
           type: "line",
           source: routeId,
           paint: {
-            "line-color": "#800080",
+            "line-color": "#8338ec",
             "line-width": 5,
           },
         });

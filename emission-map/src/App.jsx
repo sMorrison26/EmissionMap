@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { SearchBox } from "@mapbox/search-js-react";
-import SearchBar from "./components/searchbar";
 import "./App.css";
 import Sidebar from "./components/sidebar";
 import polyline from '@mapbox/polyline';

@@ -1,68 +1,83 @@
 /* Sidebar.css */
 
+
 .sidebar {
-  position: absolute;
-  background-color: rgb(35 55 75 / 90%);
-  font-family: monospace;
-  color: #fff;
-  top: 0;
-  right: 0;
-  width: 20px;
-  max-height: 100vh;
-  transition: left 0.3s ease;
-  z-index: 1000;
-  padding: 20px;
-  margin: 12px;
-  border-radius: 4px;
+	position: absolute;
+	background-color: rgb(35 55 75 / 90%);
+	font-family: monospace;
+	color: #fff;
+	top: 0;
+	right: 0;
+	width: 20px;
+	max-height: 100vh;
+	transition: left 0.3s ease;
+	z-index: 1000;
+	padding: 20px;
+	margin: 12px;
+	border-radius: 4px;
 }
 
 .sidebar-open {
-    position: absolute;
-    background-color: rgb(35 55 75 / 90%);
-    font-family: monospace;
-    color: #fff;
-    top: 0;
-    right: 0;
-    width: 300px;
-    max-height: 100vh;
-    transition: right 0.3s ease;
-    z-index: 1000;
-    padding: 20px;
-    margin: 12px;
-    border-radius: 4px;
+	position: absolute;
+	background-color: rgb(35 55 75 / 90%);
+	font-family: monospace;
+	color: #fff;
+	top: 0;
+	right: 0;
+	width: 300px;
+	max-height: 100vh;
+	transition: right 0.3s ease;
+	z-index: 1000;
+	padding: 20px;
+	margin: 12px;
+	border-radius: 4px;
+}
+.sidebar-header {
+	display: flex;
+	justify-content: flex-start;
+  align-items: center;
 }
 
-h2 {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-}
-
-/* .route {
-  margin-bottom: 15px;
-}
-
-.route h3 {
-  margin: 0;
-}
-
-.route p {
-  margin: 5px 0;
-} */
 
 .sidebar_icon {
-    color: white;
-    font-size: 1.5em;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .sidebar_icon:hover {
-    color: #FFA35C;
-  }
-  
+	color: white;
+	font-size: 1.5em;
+	cursor: pointer;
+	transition: all 0.3s ease-in-out;
+  margin-right: 1em;
+}
 
+.sidebar_icon:hover {
+	color: #ffa35c;
+}
+
+.direction-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 2em;
+}
+.direction-header > .icon {
+  margin-right: 0.5em;
+}
+.direction-header > h3 {
+  margin: 0;
+}
+hr {
+  /* background-color: rgb(255,255,255, 0.7); */
+  background-color: red;
+  color: blue;
+}
+.data-section li {
+  color: rgb(255,255,255, 0.7)
+}
+.data-section ol {
+  padding-left: 0;
+  list-style-position: inside;
+}
+.data-icon {
+  margin-left: auto;
+  transform: rotateY(180deg);
+  font-size: 1.25em;
+}

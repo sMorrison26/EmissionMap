@@ -97,39 +97,117 @@ function App() {
     console.log('Ending: ',end)
 
 		try {
-			const response = await fetch(
+
+      //fetch car data
+			const responseCar = await fetch(
 				`https://api.mapbox.com/directions/v5/mapbox/driving-traffic/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=pk.eyJ1IjoiZGFuZ2IyNCIsImEiOiJjbTc2amR0NXIwdXphMmxwcnZtanprZXZzIn0.heEc3MDcr2E2grB7VXRKgw`
 			);
-			const data = await response.json();
-			const route = data.routes[0].geometry.coordinates;
-			const stepdata = data.routes[0].legs[0].steps;
+			const dataCar = await responseCar.json();
+			let routeCar = dataCar.routes[0].geometry.coordinates;
+			const carStepData = dataCar.routes[0].legs[0].steps;
 
-			setSteps(stepdata);
+      //fetch walk data
+      const responseWalk = await fetch(
+				`https://api.mapbox.com/directions/v5/mapbox/walking/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=pk.eyJ1IjoiZGFuZ2IyNCIsImEiOiJjbTc2amR0NXIwdXphMmxwcnZtanprZXZzIn0.heEc3MDcr2E2grB7VXRKgw`
+			);
+			const dataWalk = await responseWalk.json();
+			const routeWalk = dataWalk.routes[0].geometry.coordinates;
+			const walkStepData = dataWalk.routes[0].legs[0].steps;
+      
+      const responseCycle = await fetch(
+				`https://api.mapbox.com/directions/v5/mapbox/cycling/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=pk.eyJ1IjoiZGFuZ2IyNCIsImEiOiJjbTc2amR0NXIwdXphMmxwcnZtanprZXZzIn0.heEc3MDcr2E2grB7VXRKgw`
+			);
+			const dataCycle = await responseCycle.json();
+			const routeCycle = dataCycle.routes[0].geometry.coordinates;
+			const cycleStepData = dataCycle.routes[0].legs[0].steps;
+      
 
+			setSteps({car: carStepData, walk: walkStepData, cycle: cycleStepData});
+
+      // == set car route ==
 			// Clear previous route (if any)
-			if (mapRef.current.getSource("route")) {
-				mapRef.current.removeLayer("route");
-				mapRef.current.removeSource("route");
+			if (mapRef.current.getSource("routeCar")) {
+				mapRef.current.removeLayer("routeCar");
+				mapRef.current.removeSource("routeCar");
 			}
 
 			// Display the new route
-			mapRef.current.addSource("route", {
+			mapRef.current.addSource("routeCar", {
 				type: "geojson",
 				data: {
 					type: "Feature",
 					geometry: {
 						type: "LineString",
-						coordinates: route,
+						coordinates: routeCar,
 					},
 				},
 			});
 
 			mapRef.current.addLayer({
-				id: "route",
+				id: "routeCar",
 				type: "line",
-				source: "route",
+				source: "routeCar",
 				paint: {
-					"line-color": "#3887be",
+					"line-color": "#ff0000",
+					"line-width": 5,
+				},
+			});
+
+
+      // == set walk route ==
+			// Clear previous route (if any)
+			if (mapRef.current.getSource("routeWalk")) {
+				mapRef.current.removeLayer("routeWalk");
+				mapRef.current.removeSource("routeWalk");
+			}
+
+			// Display the new route
+			mapRef.current.addSource("routeWalk", {
+				type: "geojson",
+				data: {
+					type: "Feature",
+					geometry: {
+						type: "LineString",
+						coordinates: routeWalk,
+					},
+				},
+			});
+
+			mapRef.current.addLayer({
+				id: "routeWalk",
+				type: "line",
+				source: "routeWalk",
+				paint: {
+					"line-color": "#00ff00",
+					"line-width": 5,
+				},
+			});
+
+      // == set cycle route ==
+			// Clear previous route (if any)
+			if (mapRef.current.getSource("routeCycle")) {
+				mapRef.current.removeLayer("routeCycle");
+				mapRef.current.removeSource("routeCycle");
+			}
+
+			// Display the new route
+			mapRef.current.addSource("routeCycle", {
+				type: "geojson",
+				data: {
+					type: "Feature",
+					geometry: {
+						type: "LineString",
+						coordinates: routeCycle,
+					},
+				},
+			});
+
+			mapRef.current.addLayer({
+				id: "routeCycle",
+				type: "line",
+				source: "routeCycle",
+				paint: {
+					"line-color": "#0000ff",
 					"line-width": 5,
 				},
 			});

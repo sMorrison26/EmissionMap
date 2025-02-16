@@ -75,7 +75,7 @@ const Sidebar = ({ stepData }) => {
 										icon={showDriving ? faChevronDown : faChevronRight}
 										className="icon"
 									/>
-									<h3>Driving</h3>
+									<h3>Driving - {Math.round(stepData.car.routes[0].legs[0].duration/60)} min, {Math.round(stepData.car.routes[0].legs[0].distance*0.000621371*10)/10} mi</h3>
 									<FontAwesomeIcon icon={faCar} className="data-icon" />
 								</div>
 								<hr />
@@ -104,7 +104,7 @@ const Sidebar = ({ stepData }) => {
 										icon={showCycling ? faChevronDown : faChevronRight}
 										className="icon"
 									/>
-									<h3>Cycling</h3>
+									<h3>Cycling - {Math.round(stepData.cycle.routes[0].legs[0].duration/60)} min, {Math.round(stepData.cycle.routes[0].legs[0].distance*0.000621371 * 10)/10} mi</h3>
 									<FontAwesomeIcon icon={faBicycle} className="data-icon" />
 								</div>
 								<hr />
@@ -133,7 +133,7 @@ const Sidebar = ({ stepData }) => {
 										icon={showWalking ? faChevronDown : faChevronRight}
 										className="icon"
 									/>
-									<h3>Walking</h3>
+									<h3>Walking - {Math.round(stepData.walk.routes[0].legs[0].duration/60)} min, {Math.round(stepData.walk.routes[0].legs[0].distance*0.000621371 * 10)/10} mi</h3>
 									<FontAwesomeIcon icon={faWalking} className="data-icon" />
 								</div>
 								<hr />
@@ -162,7 +162,7 @@ const Sidebar = ({ stepData }) => {
 										icon={showTransit ? faChevronDown : faChevronRight}
 										className="icon"
 									/>
-									<h3>Transit</h3>
+									<h3>Transit - {Math.round(stepData.transit.routes[0].legs[0].duration.value/60)} min, {Math.round(stepData.transit.routes[0].legs[0].distance.value*0.000621371 * 10) /10} mi</h3>
 									<FontAwesomeIcon icon={faBus} className="data-icon" />
 								</div>
 								<hr />

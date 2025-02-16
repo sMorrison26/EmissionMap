@@ -166,7 +166,7 @@ function App() {
 						type: "line",
 						source: "routeCycle",
 						paint: {
-							"line-color": "#0000ff",
+							"line-color": "#00ff00",
 							"line-width": 5,
 						},
 					});
@@ -208,7 +208,7 @@ function App() {
 						type: "line",
 						source: "routeWalk",
 						paint: {
-							"line-color": "#00ff00",
+							"line-color": "#0000ff",
 							"line-width": 5,
 						},
 					});
@@ -346,9 +346,9 @@ function App() {
 			<button className="reset-button" onClick={handleReset}>
 				Reset
 			</button>
-			<button className="demo-button" onClick={handleDemo2}>
+			{/* <button className="demo-button" onClick={handleDemo2}>
 				Demo
-			</button>
+			</button> */}
 			<Sidebar stepData={steps} />
 			<div className="search-box-container">
 				<SearchBox

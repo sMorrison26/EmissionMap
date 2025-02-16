@@ -25,6 +25,7 @@ app.get("/api/directions", async (req, res) => {
         );
 
         res.json(response.data);
+        console.log(response.data);
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch directions" });
     }

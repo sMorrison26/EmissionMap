@@ -9,7 +9,7 @@ import polyline from '@mapbox/polyline';
 import Papa from 'papaparse';
 
 const INITIAL_CENTER = [-73.935242, 40.73061];
-const INITIAL_ZOOM = 10.12;
+const INITIAL_ZOOM = 12;
 
 function App() {
 	const [count, setCount] = useState(0);
@@ -49,7 +49,7 @@ function App() {
 			setZoom(mapZoom);
 		});
 
-		collectUserCoordinates();
+		// collectUserCoordinates();
 
 		return () => {
 			mapRef.current.remove();
@@ -64,28 +64,29 @@ function App() {
 	};
 
 	//collect user coordinates
-	const collectUserCoordinates = () => {
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(
-				(position) => {
-					const userCoords = [
-						position.coords.longitude,
-						position.coords.latitude,
-					];
-					setCenter(userCoords);
-					mapRef.current.flyTo({
-						center: userCoords,
-						zoom: INITIAL_ZOOM,
-					});
-				},
-				(error) => {
-					console.error("Error retrieving user coordinates:", error);
-				}
-			);
-		} else {
-			console.error("Geolocation is not supported by this browser.");
-		}
-	};
+	// const collectUserCoordinates = () => {
+	// 	if (navigator.geolocation) {
+	// 		navigator.geolocation.getCurrentPosition(
+	// 			(position) => {
+	// 				const userCoords = [
+	// 					position.coords.longitude,
+	// 					position.coords.latitude,
+	// 				];
+	// 				setCenter(userCoords);
+	// 				mapRef.current.flyTo({
+	// 					center: userCoords,
+	// 					zoom: INITIAL_ZOOM,
+	// 				});
+	// 			},
+	// 			(error) => {
+	// 				console.error("Error retrieving user coordinates:", error);
+	// 			}
+	// 		);
+	// 	} else {
+	// 		console.error("Geolocation is not supported by this browser.");
+	// 	}
+	// };
+
 	//collect the coordinates once the user clicks on their choice from the search bar
 	const handleRetrieve = (data) => {
 		console.log("data", data);
@@ -94,15 +95,28 @@ function App() {
 		handleDemo(data.features[0].geometry.coordinates);
 	};
 
+  const convertGooglePolylineToGeoJSON = (encodedPolyline) => {
+    const coordinates = polyline.decode(encodedPolyline).map(([lat, lng]) => [lng, lat]);
+
+    return {
+      type: "Feature",
+      geometry: {
+        type: "LineString",
+        coordinates: coordinates,
+      },
+    };
+  };
+
 	const handleDemo = async (endCoordinates) => {
 		const start = center; // Default starting point (NYC center)
+    console.log(start)
 		const end = endCoordinates; // met
 
 		console.log("Starting: ", start);
 		console.log("Ending: ", end);
 
 		try {
-      var stepTemplate = {car: null, cycle: null, walk: null};
+      var stepTemplate = {car: null, cycle: null, walk: null, transit: null};
       setSteps({...stepTemplate});
 
 			//fetch car data
@@ -142,16 +156,8 @@ function App() {
 							"line-width": 5,
 						},
 					});
-
-          // setSteps({...steps, car: dataCar})
           stepTemplate.car = await dataCar;
-
 				} 
-        // else {
-        //   setSteps({...steps, car: null})
-        // }
-        
-				// const carStepData = dataCar.routes[0].legs[0].steps;
 			}
 			carData();
 
@@ -193,9 +199,6 @@ function App() {
           // setSteps({...steps, cycle: dataCycle});
           stepTemplate.cycle = await dataCycle;
 				} 
-        // else {
-        //   setSteps({...steps, cycle: null});
-        // }
 			}
 			cycleData();
 
@@ -237,37 +240,69 @@ function App() {
           // setSteps({...steps, walk: dataWalk});
           stepTemplate.walk = await dataWalk;
 				} 
-        // else {
-        //   setSteps({...steps, walk: null});
-        // }
 			}
       walkData();
 
-      console.log("YAAAAAAAAAAAAAAAAA")
+      async function transitData() {
+				//fetch walk data
+        const responseTransit = await fetch(
+          `http://localhost:5000/api/directions?origin=${start[1]},${start[0]}&destination=${end[1]},${end[0]}&mode=transit`
+        );
+      
+				const dataTransit = await responseTransit.json();
+        console.log(dataTransit)
+				if (dataTransit.routes) {
+					// == set walk route ==
+					// Clear previous route (if any)
+					if (mapRef.current.getSource("routeTransit")) {
+						mapRef.current.removeLayer("routeTransit");
+						mapRef.current.removeSource("routeTransit");
+					}
+
+          // Extract encoded polyline
+          const encodedPolyline = dataTransit.routes[0].overview_polyline.points;
+
+          // Convert to GeoJSON
+          const geoJSONRoute = convertGooglePolylineToGeoJSON(encodedPolyline);
+
+					// Display the new route
+					mapRef.current.addSource("routeTransit", {
+						type: "geojson",
+						data: geoJSONRoute,
+					});
+
+					mapRef.current.addLayer({
+						id: "routeTransit",
+						type: "line",
+						source: "routeTransit",
+						paint: {
+							"line-color": "#800080",
+							"line-width": 5,
+						},
+					});
+          // setSteps({...steps, walk: dataWalk});
+          stepTemplate.transit = await dataTransit;
+				} 
+			}
+      transitData();
+
       setSteps(stepTemplate);
-      console.log("YAAAAAAAAAAAAAAAAA", steps);
 
 			// Optionally, add a marker for the destination
 			new mapboxgl.Marker().setLngLat(end).addTo(mapRef.current);
+      //set zoom
+      const bounds = new mapboxgl.LngLatBounds();
+      geoJSONRoute.geometry.coordinates.forEach(coord => bounds.extend(coord));
 
-			mapRef.current.fitBounds([start, end], { padding: 100, maxZoom: 15 });
+      mapRef.current.fitBounds(bounds, { padding: 50 });
+
 		} catch (error) {
 			console.error("Error fetching the directions:", error);
 		}
 	};
 
 
-  const convertGooglePolylineToGeoJSON = (encodedPolyline) => {
-    const coordinates = polyline.decode(encodedPolyline).map(([lat, lng]) => [lng, lat]);
 
-    return {
-      type: "Feature",
-      geometry: {
-        type: "LineString",
-        coordinates: coordinates,
-      },
-    };
-  };
 
   const handleDemo2 = async () => {
     const origin = "40.73061,-73.935242"; // NYC start point
@@ -401,7 +436,7 @@ function App() {
 			<button className="reset-button" onClick={handleReset}>
 				Reset
 			</button>
-			<button className="demo-button" onClick={citiBikeDemo}>
+			<button className="demo-button" onClick={handleDemo2}>
 				Demo
 			</button>
 			<Sidebar stepData={steps} />

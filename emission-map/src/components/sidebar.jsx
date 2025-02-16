@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-	faBars,
 	faBicycle,
 	faBus,
 	faCar,
@@ -10,51 +9,61 @@ import {
 	faCompass,
 	faSmog,
 	faWalking,
-  faTruck,
-  faChargingStation,
-  faTrain
-
+	faTruck,
+	faChargingStation,
+	faTrain,
+	faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons";
 import "./sidebar.css";
 
-const renderTransportationData = (mode, icon, state, setState, stepsData, color) => {
-  return (
-    <div id={`${mode}data`} className="data-section">
-      <div
-        className="direction-header"
-        onClick={() => {
-          setState(!state);
-        }}
-      >
-        <FontAwesomeIcon
-          icon={state ? faChevronDown : faChevronRight}
-          className="icon"
-        />
-        <h3>{mode.charAt(0).toUpperCase() + mode.slice(1)} - {Math.round(stepsData.routes[0].legs[0].duration/60)} min, {Math.round(stepsData.routes[0].legs[0].distance*0.000621371 * 10) /10}</h3>
-        <FontAwesomeIcon icon={icon} className="data-icon" />
-      </div>
-      <hr style={{borderColor: color}}/>
-      <div hidden={!state}>
-        {stepsData ? (
-          <ol>
-            {stepsData.routes[0].legs[0].steps.map((step, index) => (
-              <li key={index}>{step.maneuver.instruction}</li>
-            ))}
-          </ol>
-        ) : (
-          <p>Not here</p>
-        )}
-      </div>
-    </div>
-  );
+const renderTransportationData = (
+	mode,
+	icon,
+	state,
+	setState,
+	stepsData,
+	color
+) => {
+	return (
+		<div id={`${mode}data`} className="data-section">
+			<div
+				className="direction-header"
+				onClick={() => {
+					setState(!state);
+				}}
+			>
+				<FontAwesomeIcon
+					icon={state ? faChevronDown : faChevronRight}
+					className="icon"
+				/>
+				<h3>
+					{mode.charAt(0).toUpperCase() + mode.slice(1)} -{" "}
+					{Math.round(stepsData.routes[0].legs[0].duration / 60)} min,{" "}
+					{Math.round(stepsData.routes[0].legs[0].distance * 0.000621371 * 10) /
+						10}
+				</h3>
+				<FontAwesomeIcon icon={icon} className="data-icon" />
+			</div>
+			<hr style={{ borderColor: color }} />
+			<div hidden={!state}>
+				{stepsData ? (
+					<ol>
+						{stepsData.routes[0].legs[0].steps.map((step, index) => (
+							<li key={index}>{step.maneuver.instruction}</li>
+						))}
+					</ol>
+				) : (
+					<p>Not here</p>
+				)}
+			</div>
+		</div>
+	);
 };
 
-
 const Sidebar = ({ stepData }) => {
-	const [sidebarOpen, setSidebarOpen] = useState(false);
-	const [className, setClassName] = useState("sidebar");
 	const [showSteps, setShowSteps] = useState(false);
 	const [showEmissions, setShowEmissions] = useState(false);
+	const [showAbout, setShowAbout] = useState(false);
 
 	const [showDriving, setShowDriving] = useState(false);
 	const [showCycling, setShowCycling] = useState(false);
@@ -67,10 +76,9 @@ const Sidebar = ({ stepData }) => {
     return "#ef476f";
   };
 
-
 	return (
-		<div className={showSteps || showEmissions ? "sidebar-open" : "sidebar"}>
-			{!showSteps && !showEmissions ? (
+		<div className={showSteps || showEmissions || showAbout ? "sidebar-open" : "sidebar"}>
+			{!showSteps && !showEmissions && !showAbout ? (
 				<FontAwesomeIcon
 					icon={faCompass}
 					className="sidebar_icon"
@@ -78,7 +86,7 @@ const Sidebar = ({ stepData }) => {
 						setShowSteps(!showSteps);
 					}}
 				/>
-			) : !showSteps && showEmissions ? (
+			) : (!showSteps && showEmissions) || (!showSteps && showAbout) ? (
 				<></>
 			) : (
 				<>
@@ -96,11 +104,32 @@ const Sidebar = ({ stepData }) => {
 						<p>Select a destination to see routes.</p>
 					) : (
 						<div>
-              <div>
-                {renderTransportationData("driving", faCar, showDriving, setShowDriving, stepData.car, "#ef476f")}
-                {renderTransportationData("cycling", faBicycle, showCycling, setShowCycling, stepData.cycle, "#ffd166")}
-                {renderTransportationData("walking", faWalking, showWalking, setShowWalking, stepData.walk, "#06d6a0")}
-              </div>
+							<div>
+								{renderTransportationData(
+									"driving",
+									faCar,
+									showDriving,
+									setShowDriving,
+									stepData.car,
+									"#ef476f"
+								)}
+								{renderTransportationData(
+									"cycling",
+									faBicycle,
+									showCycling,
+									setShowCycling,
+									stepData.cycle,
+									"#ffd166"
+								)}
+								{renderTransportationData(
+									"walking",
+									faWalking,
+									showWalking,
+									setShowWalking,
+									stepData.walk,
+									"#06d6a0"
+								)}
+							</div>
 							<div id="transitdata" className="data-section">
 								<div
 									className="direction-header"
@@ -112,31 +141,54 @@ const Sidebar = ({ stepData }) => {
 										icon={showTransit ? faChevronDown : faChevronRight}
 										className="icon"
 									/>
-									<h3>Transit - {Math.round(stepData.transit.routes[0].legs[0].duration.value/60)} min, {Math.round(stepData.transit.routes[0].legs[0].distance.value*0.000621371 * 10) /10} mi</h3>
+									<h3>
+										Transit -{" "}
+										{Math.round(
+											stepData.transit.routes[0].legs[0].duration.value / 60
+										)}{" "}
+										min,{" "}
+										{Math.round(
+											stepData.transit.routes[0].legs[0].distance.value *
+												0.000621371 *
+												10
+										) / 10}{" "}
+										mi
+									</h3>
 									<FontAwesomeIcon icon={faBus} className="data-icon" />
 								</div>
-								<hr style={{borderColor: "#8338ec"}}/>
+								<hr style={{ borderColor: "#8338ec" }} />
 								<div hidden={!showTransit}>
-                {stepData.transit ? (
-                  <ol>
-                    {stepData.transit.routes[0].legs[0].steps.map((step, index) => (
-                      <React.Fragment key={index}>
-                        <li dangerouslySetInnerHTML={{ __html: step.html_instructions }}></li>
-                        {step.steps && step.steps.length > 0 && (
-                          <div>
-                            {step.steps.map((subStep, subIndex) => (
-                              <li key={`${index}-${subIndex}`} dangerouslySetInnerHTML={{ __html: subStep.html_instructions }}></li>
-                            ))}
-                          </div>
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </ol>
+									{stepData.transit ? (
+										<ol>
+											{stepData.transit.routes[0].legs[0].steps.map(
+												(step, index) => (
+													<React.Fragment key={index}>
+														<li
+															dangerouslySetInnerHTML={{
+																__html: step.html_instructions,
+															}}
+														></li>
+														{step.steps && step.steps.length > 0 && (
+															<div>
+																{step.steps.map((subStep, subIndex) => (
+																	<li
+																		key={`${index}-${subIndex}`}
+																		dangerouslySetInnerHTML={{
+																			__html: subStep.html_instructions,
+																		}}
+																	></li>
+																))}
+															</div>
+														)}
+													</React.Fragment>
+												)
+											)}
+										</ol>
 									) : (
 										<p>Not here</p>
 									)}
-                </div>
-              </div>
+								</div>
+							</div>
 						</div>
 					)}
 				</>
@@ -144,7 +196,7 @@ const Sidebar = ({ stepData }) => {
 
 			{/* emissions stuff */}
 
-			{!showEmissions && !showSteps ? (
+			{!showEmissions && !showSteps && !showAbout ? (
 				<FontAwesomeIcon
 					icon={faSmog}
 					className="sidebar_icon"
@@ -152,7 +204,7 @@ const Sidebar = ({ stepData }) => {
 						setShowEmissions(!showEmissions);
 					}}
 				/>
-			) : !showEmissions & showSteps ? (
+			) : (!showEmissions && showSteps) || (!showEmissions && showAbout) ? (
 				<></>
 			) : (
 				<>
@@ -166,23 +218,11 @@ const Sidebar = ({ stepData }) => {
 						/>
 						<h2>Emissions</h2>
 					</div>
-          {!stepData ? (
+					{!stepData ? (
 						<p>Select a destination to see emissions.</p>
 					) : (
-
-
-
-
-
-
-
-
-
-
-
-            
-            //Emission data
-            <div>
+						//Emission data
+						<div>
 							<div id="cardata" className="data-section">
 								<div
 									className="direction-header"
@@ -197,59 +237,74 @@ const Sidebar = ({ stepData }) => {
 									<h3>Driving</h3>
 									<FontAwesomeIcon icon={faCar} className="data-icon" />
 								</div>
-								<hr style={{borderColor: '#ef476f'}}/>
+								<hr style={{ borderColor: "#ef476f" }} />
 								<div hidden={!showDriving}>
-                {stepData.car ? (
-                  <ul className="emission-list">
-                    {["standardEconomy", "suv", "hybrid", "commercialTruck", "ev"].map((vehicleType, index) => {
-                      // Emission factors (grams of CO2 per mile)
-                      const emissionFactors = {
-                        standardEconomy: 400, // g CO2/mile
-                        suv: 800, // g CO2/mile
-                        hybrid: 300, // g CO2/mile
-                        commercialTruck: 1618, // g CO2/mile
-                        ev: 200, // g CO2/mile (approximate for EVs)
-                      };
+									{stepData.car ? (
+										<ul className="emission-list">
+											{[
+												"standardEconomy",
+												"suv",
+												"hybrid",
+												"commercialTruck",
+												"ev",
+											].map((vehicleType, index) => {
+												// Emission factors (grams of CO2 per mile)
+												const emissionFactors = {
+													standardEconomy: 400, // g CO2/mile
+													suv: 800, // g CO2/mile
+													hybrid: 300, // g CO2/mile
+													commercialTruck: 1618, // g CO2/mile
+													ev: 200, // g CO2/mile (approximate for EVs)
+												};
 
-                      // Calculate emissions in miles (you can use stepData.car.routes[0].distance directly)
-                      const distanceInMiles = stepData.car.routes[0].distance * 0.000621371; // Convert meters to miles
-                      const emissionValue = distanceInMiles * emissionFactors[vehicleType];
+												// Calculate emissions in miles (you can use stepData.car.routes[0].distance directly)
+												const distanceInMiles =
+													stepData.car.routes[0].distance * 0.000621371; // Convert meters to miles
+												const emissionValue =
+													distanceInMiles * emissionFactors[vehicleType];
 
-                      return (
-                        <li key={index} className="emission-item">
-                          <div style={{display: "flex", flexDirection: "column"}}>
-                          <h6 style={{margin:'0', marginBottom:'1em'}}>{`${vehicleType.charAt(0).toUpperCase() + vehicleType.slice(1)}: ${emissionValue.toFixed(2)} g CO₂`}</h6>
-                          <div>
-                          <FontAwesomeIcon
-                            icon={
-                              vehicleType === "commercialTruck"
-                                ? faTruck
-                                : vehicleType === "ev"
-                                ? faChargingStation
-                                : faCar
-                            }
-                            className="icon"
-                          />                            
-                          <div
-                            className="progress-bar"
-                            style={{
-                              width: `${(emissionValue / 8000) * 100}%`, // Assuming 2000 is the max emission value for scaling
-                              maxWidth: '100%',
-                              background: emissionColor(emissionValue)
-                            }}
-                          ></div>
-                          </div>
-
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
-
-
-                  ) : (
-                    <p>Data not available</p>
-                  )}
+												return (
+													<li key={index} className="emission-item">
+														<div
+															style={{
+																display: "flex",
+																flexDirection: "column",
+															}}
+														>
+															<h6
+																style={{ margin: "0", marginBottom: "1em" }}
+															>{`${
+																vehicleType.charAt(0).toUpperCase() +
+																vehicleType.slice(1)
+															}: ${emissionValue.toFixed(2)} g CO₂`}</h6>
+															<div>
+																<FontAwesomeIcon
+																	icon={
+																		vehicleType === "commercialTruck"
+																			? faTruck
+																			: vehicleType === "ev"
+																			? faChargingStation
+																			: faCar
+																	}
+																	className="icon"
+																/>
+																<div
+																	className="progress-bar"
+																	style={{
+																		width: `${(emissionValue / 8000) * 100}%`, // Assuming 2000 is the max emission value for scaling
+																		maxWidth: "100%",
+																		background: emissionColor(emissionValue),
+																	}}
+																></div>
+															</div>
+														</div>
+													</li>
+												);
+											})}
+										</ul>
+									) : (
+										<p>Data not available</p>
+									)}
 								</div>
 							</div>
 							<div id="cycledata" className="data-section">
@@ -266,10 +321,13 @@ const Sidebar = ({ stepData }) => {
 									<h3>Cycling</h3>
 									<FontAwesomeIcon icon={faBicycle} className="data-icon" />
 								</div>
-								<hr style={{borderColor: '#ffd166'}}/>
+								<hr style={{ borderColor: "#ffd166" }} />
 								<div hidden={!showCycling}>
 									{stepData.cycle ? (
-                    <h4 style={{margin:'0'}}>Cycling produces a negligible carbon output. Click the 'Find CitiBikes' to locate a bike near you!</h4>
+										<h4 style={{ margin: "0" }}>
+											Cycling produces a negligible carbon output. Click the
+											'Find CitiBikes' to locate a bike near you!
+										</h4>
 									) : (
 										<p>Not here</p>
 									)}
@@ -289,10 +347,13 @@ const Sidebar = ({ stepData }) => {
 									<h3>Walking</h3>
 									<FontAwesomeIcon icon={faWalking} className="data-icon" />
 								</div>
-								<hr style={{borderColor: '#06d6a0'}}/>
+								<hr style={{ borderColor: "#06d6a0" }} />
 								<div hidden={!showWalking}>
 									{stepData.walk ? (
-                    <h4 style={{margin:'0'}}>Walking, like cycling, produces a negligible carbon output. Great for the climate and for your health!</h4>
+										<h4 style={{ margin: "0" }}>
+											Walking, like cycling, produces a negligible carbon
+											output. Great for the climate and for your health!
+										</h4>
 									) : (
 										<p>Not here</p>
 									)}
@@ -312,62 +373,115 @@ const Sidebar = ({ stepData }) => {
 									<h3>Transit</h3>
 									<FontAwesomeIcon icon={faBus} className="data-icon" />
 								</div>
-								<hr style={{borderColor: '#8338ec'}}/>
+								<hr style={{ borderColor: "#8338ec" }} />
 								<div hidden={!showTransit}>
-                {stepData.transit ? (
-                    <ul className="emission-list">
-                      {["bus", "train", "rideshare"].map((vehicleType, index) => {
-                        // Emission factors (grams of CO2 per mile)
-                        const emissionFactors = {
-                          bus: 100, // g CO2/mile (Example for bus)
-                          train: 50, // g CO2/mile (Example for train)
-                          rideshare: 80, // g CO2/mile (Example for rideshare)
-                        };
+									{stepData.transit ? (
+										<ul className="emission-list">
+											{["bus", "train", "rideshare"].map(
+												(vehicleType, index) => {
+													// Emission factors (grams of CO2 per mile)
+													const emissionFactors = {
+														bus: 100, // g CO2/mile (Example for bus)
+														train: 50, // g CO2/mile (Example for train)
+														rideshare: 80, // g CO2/mile (Example for rideshare)
+													};
 
-                        // Calculate emissions in miles (use stepData.transit.routes[0].distance)
-                        const distanceInMiles = stepData.transit.routes[0].legs[0].distance.value * 0.000621371; // Convert meters to miles
-                        const emissionValue = distanceInMiles * emissionFactors[vehicleType];
+													// Calculate emissions in miles (use stepData.transit.routes[0].distance)
+													const distanceInMiles =
+														stepData.transit.routes[0].legs[0].distance.value *
+														0.000621371; // Convert meters to miles
+													const emissionValue =
+														distanceInMiles * emissionFactors[vehicleType];
 
-                        return (
-                          <li key={index} className="emission-item">
-                            <div style={{ display: "flex", flexDirection: "column" }}>
-                              <h6 style={{ margin: '0', marginBottom: '1em' }}>
-                                {`${vehicleType.charAt(0).toUpperCase() + vehicleType.slice(1)}: ${emissionValue.toFixed(2)} g CO₂`}
-                              </h6>
-                              <div>
-                                <FontAwesomeIcon
-                                  icon={
-                                    vehicleType === "rideshare"
-                                      ? faCar
-                                      : vehicleType === "train"
-                                      ? faTrain
-                                      : faBus
-                                  }
-                                  className="icon"
-                                />
-                                <div
-                                  className="progress-bar"
-                                  style={{
-                                    width: `${(emissionValue / 8000) * 100}%`, // Scale emissions to max width (you can adjust the max value)
-                                    maxWidth: '100%',
-                                    background: emissionColor(emissionValue),
-                                  }}
-                                ></div>
-                              </div>
-                            </div>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  ) : (
-                    <p>No transit data available</p>
-                  )}
-
-                </div>
-              </div>
+													return (
+														<li key={index} className="emission-item">
+															<div
+																style={{
+																	display: "flex",
+																	flexDirection: "column",
+																}}
+															>
+																<h6
+																	style={{ margin: "0", marginBottom: "1em" }}
+																>
+																	{`${
+																		vehicleType.charAt(0).toUpperCase() +
+																		vehicleType.slice(1)
+																	}: ${emissionValue.toFixed(2)} g CO₂`}
+																</h6>
+																<div>
+																	<FontAwesomeIcon
+																		icon={
+																			vehicleType === "rideshare"
+																				? faCar
+																				: vehicleType === "train"
+																				? faTrain
+																				: faBus
+																		}
+																		className="icon"
+																	/>
+																	<div
+																		className="progress-bar"
+																		style={{
+																			width: `${(emissionValue / 8000) * 100}%`, // Scale emissions to max width (you can adjust the max value)
+																			maxWidth: "100%",
+																			background: emissionColor(emissionValue),
+																		}}
+																	></div>
+																</div>
+															</div>
+														</li>
+													);
+												}
+											)}
+										</ul>
+									) : (
+										<p>No transit data available</p>
+									)}
+								</div>
+							</div>
 						</div>
-            
-          )}
+					)}
+				</>
+			)}
+
+			{/* About Section */}
+			{!showAbout && !showEmissions && !showSteps ? (
+				<FontAwesomeIcon
+					icon={faCircleInfo}
+					className="sidebar_icon"
+					onClick={() => {
+						setShowAbout(!showAbout);
+					}}
+				/>
+			) : (!showAbout && showEmissions) || (!showAbout && showSteps) ? (
+				<></>
+			) : (
+				<>
+					<div className="sidebar-header">
+						<FontAwesomeIcon
+							icon={faCircleInfo}
+							className="sidebar_icon"
+							onClick={() => {
+								setShowAbout(!showAbout);
+							}}
+						/>
+						<h2>About</h2>
+					</div>
+					<div>
+						<div>
+							<h3>How to Use</h3>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+						</div>
+						<div>
+							<h3>Our Mission</h3>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+						</div>
+						<div>
+							<h3>About Us</h3>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+						</div>
+					</div>
 				</>
 			)}
 		</div>
@@ -375,4 +489,3 @@ const Sidebar = ({ stepData }) => {
 };
 
 export default Sidebar;
-

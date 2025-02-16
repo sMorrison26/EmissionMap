@@ -268,10 +268,9 @@ function App() {
 
 	return (
 		<>
-        <div style={{height: '50px', margin: '0', padding: '0', display:'flex', flexDirection:'column', alignContent:'center'}}>
-          <img src=''></img>
-          <h1 style={{marginTop: 10, fontFamily: 'monospace'}}>GreenRoute</h1>
-
+        <div style={{height: '60px', margin: '0', padding: '0', display:'flex', alignContent: 'center'}}>
+          <img style={{marginTop: 5,height:'50px', width: '50px', marginLeft: 10}} src='logo.png'></img>
+          <h1 style={{marginTop: 12, marginLeft:10, fontFamily: 'monospace', type:'bold', color:'#073b4c', }}>GreenRoute</h1>
         </div>
           <div className="coordbar">
             Longitude: {center[0].toFixed(4)} | Latitude: {center[1].toFixed(4)} |

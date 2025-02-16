@@ -14,8 +14,8 @@
 }
 
 .coordbar {
-  background-color: rgb(35 55 75 / 90%);
-  color: #fff;
+  background-color: #073b4c;
+  color: #f7fff7;
   padding: 6px 12px;
   font-family: monospace;
   z-index: 1;
@@ -37,13 +37,10 @@
 }
 
 .search-box-container {
-  /* background-color: rgb(35 55 75 / 90%); */
   margin: 12px;
   position: absolute;
   top: 0;
   left: 0;
-  /* width: 200px; */
-  /* height: 200px; */
   z-index: 1;
 }
 

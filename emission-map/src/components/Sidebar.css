@@ -2,9 +2,10 @@
 
 .sidebar {
 	position: absolute;
-	background-color: rgb(35 55 75 / 90%);
+	/* background-color: rgb(255, 255, 255); */
+  background-color: #073b4c;
 	font-family: monospace;
-	color: #fff;
+  color: #f7fff7;
 	top: 0;
 	right: 0;
 	width: fit-content;
@@ -23,9 +24,11 @@
 
 .sidebar-open {
 	position: absolute;
-	background-color: rgb(35 55 75 / 90%);
+	/* background-color: rgb(35 55 75 / 90%); */
+	/* background-color: rgb(255, 255, 255); */
+  background-color: #073b4c;
 	font-family: monospace;
-	color: #fff;
+	color: #f7fff7;
 	top: 0;
 	right: 0;
 	width: 30vw;
@@ -44,7 +47,6 @@
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
-	/* top: 0.25em; */
 	margin-bottom: 0.5em;
 }
 .sidebar-header h2 {
@@ -52,7 +54,7 @@
 }
 
 .sidebar_icon {
-	color: white;
+	color: #f7fff7;
 	font-size: 1.5em;
 	cursor: pointer;
 	transition: all 0.3s ease-in-out;
@@ -75,87 +77,9 @@
 .direction-header > h3 {
 	margin: 0;
 }
-hr {
-	/* background-color: rgb(255,255,255, 0.7); */
-	background-color: red;
-	color: blue;
-}
+
 .data-section li {
-	color: rgb(255, 255, 255, 0.7);
-}
-.data-section ol {
-	padding-left: 0;
-	list-style-position: inside;
-	max-height: 15vh;
-	overflow-y: auto;
-}
-.data-icon {
-	margin-left: auto;
-	transform: rotateY(180deg);
-	font-size: 1.25em;
-}
-
-.sidebar-open {
-	position: absolute;
-	background-color: rgb(35 55 75 / 90%);
-	font-family: monospace;
-	color: #fff;
-	top: 0;
-	right: 0;
-	width: 30vw;
-	height: 100vh;
-	overflow: auto;
-	transition: right 0.3s ease;
-	z-index: 1000;
-	padding: 1.5em;
-	margin: 0;
-	border-radius: 0;
-}
-.sidebar-open .sidebar_icon {
-	margin-right: 1em;
-}
-.sidebar-header {
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-	/* top: 0.25em; */
-	margin-bottom: 0.5em;
-}
-.sidebar-header h2 {
-	margin: 0;
-}
-
-.sidebar_icon {
-	color: white;
-	font-size: 1.5em;
-	cursor: pointer;
-	transition: all 0.3s ease-in-out;
-}
-
-.sidebar_icon:hover {
-	color: #ffa35c;
-}
-
-.direction-header {
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-	cursor: pointer;
-	margin-top: 2em;
-}
-.direction-header > .icon {
-	margin-right: 0.5em;
-}
-.direction-header > h3 {
-	margin: 0;
-}
-hr {
-	/* background-color: rgb(255,255,255, 0.7); */
-	background-color: red;
-	color: blue;
-}
-.data-section li {
-	color: rgb(255, 255, 255, 0.7);
+	color: rgb(35 55 75, 0.6);
 }
 .data-section ol {
 	padding-left: 0;

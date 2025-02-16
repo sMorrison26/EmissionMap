@@ -127,7 +127,7 @@ function App() {
 						type: "line",
 						source: "routeCar",
 						paint: {
-							"line-color": "#ff0000",
+							"line-color": "#ef476f",
 							"line-width": 5,
 						},
 					});
@@ -166,7 +166,7 @@ function App() {
 						type: "line",
 						source: "routeCycle",
 						paint: {
-							"line-color": "#00ff00",
+							"line-color": "#ffd166",
 							"line-width": 5,
 						},
 					});
@@ -208,7 +208,7 @@ function App() {
 						type: "line",
 						source: "routeWalk",
 						paint: {
-							"line-color": "#0000ff",
+							"line-color": "#06d6a0",
 							"line-width": 5,
 						},
 					});
@@ -251,7 +251,7 @@ function App() {
 						type: "line",
 						source: "routeTransit",
 						paint: {
-							"line-color": "#800080",
+							"line-color": "#8338ec",
 							"line-width": 5,
 						},
 					});

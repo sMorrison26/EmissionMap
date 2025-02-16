@@ -17,7 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./sidebar.css";
 
-const renderTransportationData = (mode, icon, state, setState, stepsData) => {
+const renderTransportationData = (mode, icon, state, setState, stepsData, color) => {
   return (
     <div id={`${mode}data`} className="data-section">
       <div
@@ -33,7 +33,7 @@ const renderTransportationData = (mode, icon, state, setState, stepsData) => {
         <h3>{mode.charAt(0).toUpperCase() + mode.slice(1)} - {Math.round(stepsData.routes[0].legs[0].duration/60)} min, {Math.round(stepsData.routes[0].legs[0].distance*0.000621371 * 10) /10}</h3>
         <FontAwesomeIcon icon={icon} className="data-icon" />
       </div>
-      <hr />
+      <hr style={{borderColor: color}}/>
       <div hidden={!state}>
         {stepsData ? (
           <ol>
@@ -97,9 +97,9 @@ const Sidebar = ({ stepData }) => {
 					) : (
 						<div>
               <div>
-                {renderTransportationData("driving", faCar, showDriving, setShowDriving, stepData.car)}
-                {renderTransportationData("cycling", faBicycle, showCycling, setShowCycling, stepData.cycle)}
-                {renderTransportationData("walking", faWalking, showWalking, setShowWalking, stepData.walk)}
+                {renderTransportationData("driving", faCar, showDriving, setShowDriving, stepData.car, "#ef476f")}
+                {renderTransportationData("cycling", faBicycle, showCycling, setShowCycling, stepData.cycle, "#ffd166")}
+                {renderTransportationData("walking", faWalking, showWalking, setShowWalking, stepData.walk, "#06d6a0")}
               </div>
 							<div id="transitdata" className="data-section">
 								<div
@@ -115,7 +115,7 @@ const Sidebar = ({ stepData }) => {
 									<h3>Transit - {Math.round(stepData.transit.routes[0].legs[0].duration.value/60)} min, {Math.round(stepData.transit.routes[0].legs[0].distance.value*0.000621371 * 10) /10} mi</h3>
 									<FontAwesomeIcon icon={faBus} className="data-icon" />
 								</div>
-								<hr />
+								<hr style={{borderColor: "#8338ec"}}/>
 								<div hidden={!showTransit}>
                 {stepData.transit ? (
                   <ol>

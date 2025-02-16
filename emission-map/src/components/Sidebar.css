@@ -75,6 +75,8 @@ hr {
 .data-section ol {
   padding-left: 0;
   list-style-position: inside;
+  max-height: 15vh;
+  overflow-y: auto;
 }
 .data-icon {
   margin-left: auto;

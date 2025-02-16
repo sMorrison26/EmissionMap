@@ -146,7 +146,7 @@ const Sidebar = ({ stepData }) => {
 									}}
 								>
 									<FontAwesomeIcon
-										icon={showWalking ? faChevronDown : faChevronRight}
+										icon={showTransit ? faChevronDown : faChevronRight}
 										className="icon"
 									/>
 									<h3>Transit</h3>

@@ -5,6 +5,8 @@ import { SearchBox } from "@mapbox/search-js-react";
 import SearchBar from "./components/searchbar";
 import "./App.css";
 import Sidebar from "./components/sidebar";
+import polyline from '@mapbox/polyline';
+import Papa from 'papaparse';
 
 const INITIAL_CENTER = [-73.935242, 40.73061];
 const INITIAL_ZOOM = 10.12;
@@ -254,6 +256,142 @@ function App() {
 		}
 	};
 
+
+  const convertGooglePolylineToGeoJSON = (encodedPolyline) => {
+    const coordinates = polyline.decode(encodedPolyline).map(([lat, lng]) => [lng, lat]);
+
+    return {
+      type: "Feature",
+      geometry: {
+        type: "LineString",
+        coordinates: coordinates,
+      },
+    };
+  };
+
+  const handleDemo2 = async () => {
+    const origin = "40.73061,-73.935242"; // NYC start point
+    const destination = "40.77943,-73.963402"; // Destination
+    const mode = "transit"; // Transit mode
+  
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/directions?origin=${origin}&destination=${destination}&mode=${mode}`
+     );
+    
+  
+      const data = await response.json();
+      
+      if (data.status !== "OK") {
+        console.error("Error fetching directions:", data.status);
+        return;
+      }
+
+  
+      const steps = data.routes[0].legs[0].steps;
+      console.log("Steps:", steps);
+      setSteps(steps); // Store steps in state
+
+      // Extract encoded polyline
+      const encodedPolyline = data.routes[0].overview_polyline.points;
+
+      // Convert to GeoJSON
+      const geoJSONRoute = convertGooglePolylineToGeoJSON(encodedPolyline);
+
+      // Display on Mapbox
+      if (mapRef.current.getSource('route')) {
+        mapRef.current.removeLayer('route');
+        mapRef.current.removeSource('route');
+      }
+
+      mapRef.current.addSource('route', {
+        type: 'geojson',
+        data: geoJSONRoute,
+      });
+
+      mapRef.current.addLayer({
+        id: 'route',
+        type: 'line',
+        source: 'route',
+        paint: {
+          'line-color': '#FF5733', // Customize color
+          'line-width': 5,
+        },
+      });
+
+      // Zoom to fit the route
+      const bounds = new mapboxgl.LngLatBounds();
+      geoJSONRoute.geometry.coordinates.forEach(coord => bounds.extend(coord));
+
+      mapRef.current.fitBounds(bounds, { padding: 50 });
+
+
+    } catch (error) {
+      console.error("Error fetching Google Maps directions:", error);
+    }
+  };
+  
+  //CITIBIKE DATA POINTS
+  const parseCitibikeData = (csvData) => {
+    return new Promise((resolve, reject) => {
+        Papa.parse(csvData, {
+            header: true, // Use the first row as column headers
+            skipEmptyLines: true, // Ignore empty lines
+            delimiter:',',
+            quoteChar: '"', 
+            complete: (result) => {
+                // console.log("Parsed Result:", result); // Log the result of the parsing
+                resolve(result.data);
+            },
+            error: (err) => {
+                console.error("Parsing Error:", err);
+                reject(err);
+            },
+        });
+    });
+};
+
+  const findStationsWithinBoundingBox = (userLat, userLon, stations) => {
+    const radiusInDegrees = 0.0100;  // 1 mile radius approximation in degrees
+  
+    const minLat = userLat - radiusInDegrees;
+    const maxLat = userLat + radiusInDegrees;
+    const minLon = userLon - radiusInDegrees;
+    const maxLon = userLon + radiusInDegrees;
+  
+    const nearbyStations = stations.filter(station => {
+      const lat = parseFloat(station.lat);
+      const lon = parseFloat(station.lon);
+      return lat >= minLat && lat <= maxLat && lon >= minLon && lon <= maxLon;
+    });
+  
+    return nearbyStations;
+  };
+
+  const citiBikeDemo = async (userLat, userLon) => {
+    // Parse CSV data (you can fetch or load the CSV file dynamically)
+    const csvData = await fetch('citibike.csv').then(res => res.text());
+    // console.log(csvData)
+    const stations = await parseCitibikeData(csvData);
+    console.log(stations)
+    
+    const nearbyStations = findStationsWithinBoundingBox(center[0], center[1], stations);
+    
+    nearbyStations.forEach(station => {
+      const stationLat = parseFloat(station.lat);
+      const stationLon = parseFloat(station.lon);
+      const stationName = station.name;
+
+      // Add a marker for each station
+      new mapboxgl.Marker()
+        .setLngLat([stationLon, stationLat])
+        .setPopup(new mapboxgl.Popup().setText(stationName))
+        .addTo(mapRef.current);
+    });
+  };
+
+
+
 	return (
 		<>
 			<div className="coordbar">
@@ -263,7 +401,7 @@ function App() {
 			<button className="reset-button" onClick={handleReset}>
 				Reset
 			</button>
-			<button className="demo-button" onClick={handleDemo}>
+			<button className="demo-button" onClick={citiBikeDemo}>
 				Demo
 			</button>
 			<Sidebar stepData={steps} />

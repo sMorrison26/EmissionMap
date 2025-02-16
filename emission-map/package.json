@@ -21,7 +21,9 @@
     "@mui/material": "^6.4.4",
     "axios": "^1.7.9",
     "express": "^4.21.2",
+    "geojson-polyline": "^1.0.3",
     "mapbox-gl": "^3.10.0",
+    "papaparse": "^5.5.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

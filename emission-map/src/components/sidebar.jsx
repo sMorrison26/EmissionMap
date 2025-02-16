@@ -62,7 +62,7 @@ const Sidebar = ({ stepData }) => {
 	const [showTransit, setShowTransit] = useState(false);
 
   const emissionColor = (emission) => {
-    if (emission < 2000) return "green";
+    if (emission < 1000) return "green";
     if (emission < 3000) return "yellow";
     return "red";
   };
@@ -233,7 +233,7 @@ const Sidebar = ({ stepData }) => {
                           <div
                             className="progress-bar"
                             style={{
-                              width: `${(emissionValue / 10000) * 100}%`, // Assuming 2000 is the max emission value for scaling
+                              width: `${(emissionValue / 8000) * 100}%`, // Assuming 2000 is the max emission value for scaling
                               maxWidth: '100%',
                               background: emissionColor(emissionValue)
                             }}

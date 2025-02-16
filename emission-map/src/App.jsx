@@ -34,10 +34,6 @@ function App() {
 			style: "mapbox://styles/mapbox/streets-v11",
 		});
 
-		// const marker = new mapboxgl.Marker() // initialize a new marker
-		//   .setLngLat([-73.935242, 40.730610]) // Marker [lng, lat] coordinates
-		//   .addTo(mapRef); // Add the marker to the map
-
 		mapRef.current.on("move", () => {
 			// get the current center coordinates and zoom level from the map
 			const mapCenter = mapRef.current.getCenter();
@@ -47,7 +43,6 @@ function App() {
 			setCenter([mapCenter.lng, mapCenter.lat]);
 			setZoom(mapZoom);
 		});
-
 		// collectUserCoordinates();
 
 		return () => {
@@ -60,6 +55,20 @@ function App() {
 			center: INITIAL_CENTER,
 			zoom: INITIAL_ZOOM,
 		});
+    
+    // Remove all layers and sources
+    mapRef.current.getStyle().layers.forEach((layer) => {
+      if (layer.id.startsWith("route")) {
+        mapRef.current.removeLayer(layer.id);
+        if (mapRef.current.getSource(layer.id)) {
+          mapRef.current.removeSource(layer.id);
+        }
+      }
+    });
+
+    // Remove all markers by selecting them from the DOM
+    document.querySelectorAll(".mapboxgl-marker").forEach((marker) => marker.remove());
+
 	};
 
 	//collect the coordinates once the user clicks on their choice from the search bar
@@ -67,7 +76,7 @@ function App() {
 		console.log("data", data);
 		console.log("coords:", data.features[0].geometry.coordinates);
 		setEndCoords(data.features[0].geometry.coordinates);
-		handleDemo(data.features[0].geometry.coordinates);
+		getRoutes(data.features[0].geometry.coordinates);
 	};
 
   const convertGooglePolylineToGeoJSON = (encodedPolyline) => {
@@ -82,199 +91,119 @@ function App() {
     };
   };
 
-	const handleDemo = async (endCoordinates) => {
-		const start = center; // Default starting point (NYC center)
-    console.log(start)
-		const end = endCoordinates; // met
-
-		console.log("Starting: ", start);
-		console.log("Ending: ", end);
-
-		try {
-      var stepTemplate = {car: null, cycle: null, walk: null, transit: null};
-      setSteps({...stepTemplate});
-
-			//fetch car data
-			async function carData() {
-				const responseCar = await fetch(
-					`https://api.mapbox.com/directions/v5/mapbox/driving-traffic/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=pk.eyJ1IjoiZGFuZ2IyNCIsImEiOiJjbTc2amR0NXIwdXphMmxwcnZtanprZXZzIn0.heEc3MDcr2E2grB7VXRKgw`
-				);
-				const dataCar = await responseCar.json();
-				console.log("DataCar", dataCar);
-
-				if (dataCar.routes) {
-					// == set car route ==
-					// Clear previous route (if any)
-					if (mapRef.current.getSource("routeCar")) {
-						mapRef.current.removeLayer("routeCar");
-						mapRef.current.removeSource("routeCar");
-					}
-
-					// Display the new route
-					mapRef.current.addSource("routeCar", {
-						type: "geojson",
-						data: {
-							type: "Feature",
-							geometry: {
-								type: "LineString",
-								coordinates: dataCar.routes[0].geometry.coordinates,
-							},
-						},
-					});
-
-					mapRef.current.addLayer({
-						id: "routeCar",
-						type: "line",
-						source: "routeCar",
-						paint: {
-							"line-color": "#ef476f",
-							"line-width": 5,
-						},
-					});
-          stepTemplate.car = await dataCar;
-				} 
-			}
-			carData();
-
-			async function cycleData() {
-				const responseCycle = await fetch(
-					`https://api.mapbox.com/directions/v5/mapbox/cycling/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=pk.eyJ1IjoiZGFuZ2IyNCIsImEiOiJjbTc2amR0NXIwdXphMmxwcnZtanprZXZzIn0.heEc3MDcr2E2grB7VXRKgw`
-				);
-				const dataCycle = await responseCycle.json();
-				if (dataCycle.routes) {
-					// == set cycle route ==
-					// Clear previous route (if any)
-					if (mapRef.current.getSource("routeCycle")) {
-						mapRef.current.removeLayer("routeCycle");
-						mapRef.current.removeSource("routeCycle");
-					}
-
-					// Display the new route
-					mapRef.current.addSource("routeCycle", {
-						type: "geojson",
-						data: {
-							type: "Feature",
-							geometry: {
-								type: "LineString",
-								coordinates: dataCycle.routes[0].geometry.coordinates,
-							},
-						},
-					});
-
-					mapRef.current.addLayer({
-						id: "routeCycle",
-						type: "line",
-						source: "routeCycle",
-						paint: {
-							"line-color": "#ffd166",
-							"line-width": 5,
-						},
-					});
-
-          // setSteps({...steps, cycle: dataCycle});
-          stepTemplate.cycle = await dataCycle;
-				} 
-			}
-			cycleData();
-
-			async function walkData() {
-				//fetch walk data
-				const responseWalk = await fetch(
-					`https://api.mapbox.com/directions/v5/mapbox/walking/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=pk.eyJ1IjoiZGFuZ2IyNCIsImEiOiJjbTc2amR0NXIwdXphMmxwcnZtanprZXZzIn0.heEc3MDcr2E2grB7VXRKgw`
-				);
-				const dataWalk = await responseWalk.json();
-				if (dataWalk.routes) {
-					// == set walk route ==
-					// Clear previous route (if any)
-					if (mapRef.current.getSource("routeWalk")) {
-						mapRef.current.removeLayer("routeWalk");
-						mapRef.current.removeSource("routeWalk");
-					}
-
-					// Display the new route
-					mapRef.current.addSource("routeWalk", {
-						type: "geojson",
-						data: {
-							type: "Feature",
-							geometry: {
-								type: "LineString",
-								coordinates: dataWalk.routes[0].geometry.coordinates,
-							},
-						},
-					});
-
-					mapRef.current.addLayer({
-						id: "routeWalk",
-						type: "line",
-						source: "routeWalk",
-						paint: {
-							"line-color": "#06d6a0",
-							"line-width": 5,
-						},
-					});
-          // setSteps({...steps, walk: dataWalk});
-          stepTemplate.walk = await dataWalk;
-				} 
-			}
-      walkData();
-
-      async function transitData() {
-				//fetch walk data
-        const responseTransit = await fetch(
-          `http://localhost:5000/api/directions?origin=${start[1]},${start[0]}&destination=${end[1]},${end[0]}&mode=transit`
+  const getRoutes = async (endCoordinates) => {
+    setCenter(INITIAL_CENTER);
+    const start = center; // Default starting point (NYC center)
+    console.log("Starting: ", start);
+    console.log("Ending: ", endCoordinates);
+  
+    try {
+      const stepTemplate = { car: null, cycle: null, walk: null, transit: null };
+      setSteps({ ...stepTemplate });
+  
+      const routeConfigs = [
+        { mode: "driving-traffic", color: "#ff0000", key: "car" },
+        { mode: "cycling", color: "#0000ff", key: "cycle" },
+        { mode: "walking", color: "#00ff00", key: "walk" },
+      ];
+  
+      // Function to fetch and process route data
+      const fetchRouteData = async ({ mode, color, key }) => {
+        const response = await fetch(
+          `https://api.mapbox.com/directions/v5/mapbox/${mode}/${start[0]},${start[1]};${endCoordinates[0]},${endCoordinates[1]}?steps=true&geometries=geojson&access_token=pk.eyJ1IjoiZGFuZ2IyNCIsImEiOiJjbTc2amR0NXIwdXphMmxwcnZtanprZXZzIn0.heEc3MDcr2E2grB7VXRKgw`
         );
-      
-				const dataTransit = await responseTransit.json();
-        console.log(dataTransit)
-				if (dataTransit.routes) {
-					// == set walk route ==
-					// Clear previous route (if any)
-					if (mapRef.current.getSource("routeTransit")) {
-						mapRef.current.removeLayer("routeTransit");
-						mapRef.current.removeSource("routeTransit");
-					}
-
-          // Extract encoded polyline
-          const encodedPolyline = dataTransit.routes[0].overview_polyline.points;
-
-          // Convert to GeoJSON
-          const geoJSONRoute = convertGooglePolylineToGeoJSON(encodedPolyline);
-
-					// Display the new route
-					mapRef.current.addSource("routeTransit", {
-						type: "geojson",
-						data: geoJSONRoute,
-					});
-
-					mapRef.current.addLayer({
-						id: "routeTransit",
-						type: "line",
-						source: "routeTransit",
-						paint: {
-							"line-color": "#8338ec",
-							"line-width": 5,
-						},
-					});
-          // setSteps({...steps, walk: dataWalk});
-          stepTemplate.transit = await dataTransit;
-				} 
-			}
-      transitData();
-
+        const data = await response.json();
+  
+        if (data.routes) {
+          const routeId = `route${key.charAt(0).toUpperCase() + key.slice(1)}`;
+  
+          // Remove previous route if exists
+          if (mapRef.current.getSource(routeId)) {
+            mapRef.current.removeLayer(routeId);
+            mapRef.current.removeSource(routeId);
+          }
+  
+          // Add new route to map
+          mapRef.current.addSource(routeId, {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              geometry: {
+                type: "LineString",
+                coordinates: data.routes[0].geometry.coordinates,
+              },
+            },
+          });
+  
+          mapRef.current.addLayer({
+            id: routeId,
+            type: "line",
+            source: routeId,
+            paint: {
+              "line-color": color,
+              "line-width": 5,
+            },
+          });
+  
+          stepTemplate[key] = data;
+        }
+      };
+  
+      // Fetch data for car, cycle, and walk
+      await Promise.all(routeConfigs.map(fetchRouteData));
+  
+      // Fetch transit data separately
+      const responseTransit = await fetch(
+        `http://localhost:5000/api/directions?origin=${start[1]},${start[0]}&destination=${endCoordinates[1]},${endCoordinates[0]}&mode=transit`
+      );
+      const dataTransit = await responseTransit.json();
+  
+      if (dataTransit.routes) {
+        const routeId = "routeTransit";
+  
+        if (mapRef.current.getSource(routeId)) {
+          mapRef.current.removeLayer(routeId);
+          mapRef.current.removeSource(routeId);
+        }
+  
+        const encodedPolyline = dataTransit.routes[0].overview_polyline.points;
+        const geoJSONRoute = convertGooglePolylineToGeoJSON(encodedPolyline);
+  
+        mapRef.current.addSource(routeId, {
+          type: "geojson",
+          data: geoJSONRoute,
+        });
+  
+        mapRef.current.addLayer({
+          id: routeId,
+          type: "line",
+          source: routeId,
+          paint: {
+            "line-color": "#800080",
+            "line-width": 5,
+          },
+        });
+  
+        stepTemplate.transit = dataTransit;
+      }
+  
       setSteps(stepTemplate);
-
-			// Optionally, add a marker for the destination
-			new mapboxgl.Marker().setLngLat(end).addTo(mapRef.current);
-      //set zoom
+  
+      // Optionally, add a marker for the destination
+      new mapboxgl.Marker().setLngLat(endCoordinates).addTo(mapRef.current);
+  
+      // Fit map to route bounds
       const bounds = new mapboxgl.LngLatBounds();
-      geoJSONRoute.geometry.coordinates.forEach(coord => bounds.extend(coord));
-
+      stepTemplate.car?.routes[0].geometry.coordinates.forEach(coord =>
+        bounds.extend(coord)
+      );
+  
       mapRef.current.fitBounds(bounds, { padding: 50 });
-
-		} catch (error) {
-			console.error("Error fetching the directions:", error);
-		}
-	};
+  
+    } catch (error) {
+      console.error("Error fetching the directions:", error);
+    }
+  };
   
   //CITIBIKE DATA POINTS
   const parseCitibikeData = (csvData) => {
@@ -318,9 +247,9 @@ function App() {
     const csvData = await fetch('citibike.csv').then(res => res.text());
     // console.log(csvData)
     const stations = await parseCitibikeData(csvData);
-    console.log(stations)
+    // console.log(stations)
     
-    const nearbyStations = findStationsWithinBoundingBox(center[0], center[1], stations);
+    const nearbyStations = findStationsWithinBoundingBox(40.73061, -73.935242, stations);
     
     nearbyStations.forEach(station => {
       const stationLat = parseFloat(station.lat);
@@ -339,40 +268,46 @@ function App() {
 
 	return (
 		<>
-			<div className="coordbar">
-				Longitude: {center[0].toFixed(4)} | Latitude: {center[1].toFixed(4)} |
-				Zoom: {zoom.toFixed(2)}
-			</div>
-			<button className="reset-button" onClick={handleReset}>
-				Reset
-			</button>
-			{/* <button className="demo-button" onClick={handleDemo2}>
-				Demo
-			</button> */}
-			<Sidebar stepData={steps} />
-			<div className="search-box-container">
-				<SearchBox
-					accessToken="pk.eyJ1IjoiZGFuZ2IyNCIsImEiOiJjbTc2amR0NXIwdXphMmxwcnZtanprZXZzIn0.heEc3MDcr2E2grB7VXRKgw"
-					map={mapRef.current}
-					mapboxgl={mapboxgl}
-					value={inputValue}
-					onChange={(d) => {
-						setInputValue(d);
-					}}
-					options={{
-						language: "en",
-						country: "US",
-						proximity: {
-							lng: center[0],
-							lat: center[1],
-						},
-					}}
-					onRetrieve={handleRetrieve}
-					marker
-				/>
-			</div>
-			<div id="map-container" ref={mapContainerRef} />
+        <div style={{height: '50px', margin: '0', padding: '0', display:'flex', flexDirection:'column', alignContent:'center'}}>
+          <img src=''></img>
+          <h1 style={{marginTop: 10, fontFamily: 'monospace'}}>GreenRoute</h1>
+
+        </div>
+          <div className="coordbar">
+            Longitude: {center[0].toFixed(4)} | Latitude: {center[1].toFixed(4)} |
+            Zoom: {zoom.toFixed(2)}
+          </div>
+          <button className="reset-button" onClick={handleReset}>
+            Reset
+          </button>
+          <button className="demo-button" onClick={citiBikeDemo}>
+            Find CitiBikes
+          </button>
+          <Sidebar stepData={steps} />
+          <div className="search-box-container">
+            <SearchBox
+              accessToken="pk.eyJ1IjoiZGFuZ2IyNCIsImEiOiJjbTc2amR0NXIwdXphMmxwcnZtanprZXZzIn0.heEc3MDcr2E2grB7VXRKgw"
+              map={mapRef.current}
+              mapboxgl={mapboxgl}
+              value={inputValue}
+              onChange={(d) => {
+                setInputValue(d);
+              }}
+              options={{
+                language: "en",
+                country: "US",
+                proximity: {
+                  lng: center[0],
+                  lat: center[1],
+                },
+              }}
+              onRetrieve={handleRetrieve}
+              marker
+            />
+          </div>
+          <div id="map-container" ref={mapContainerRef} />
 		</>
+
 	);
 }
 

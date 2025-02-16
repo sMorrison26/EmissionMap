@@ -1,57 +1,55 @@
 /* Sidebar.css */
 
-
 .sidebar {
-  position: absolute;
-  background-color: rgb(35 55 75 / 90%);
-  font-family: monospace;
-  color: #fff;
-  top: 0;
-  right: 0;
-  width: fit-content;
-  height: 100vh;
-  overflow: auto;
-  transition: left 0.3s ease;
-  z-index: 1000;
-  padding: 1.5em;
-  margin: 0;
-  border-radius: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2em;
+	position: absolute;
+	background-color: rgb(35 55 75 / 90%);
+	font-family: monospace;
+	color: #fff;
+	top: 0;
+	right: 0;
+	width: fit-content;
+	height: 100vh;
+	overflow: auto;
+	transition: left 0.3s ease;
+	z-index: 1000;
+	padding: 1.5em;
+	margin: 0;
+	border-radius: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2em;
 }
 
 .sidebar-open {
-  position: absolute;
-  background-color: rgb(35 55 75 / 90%);
-  font-family: monospace;
-  color: #fff;
-  top: 0;
-  right: 0;
-  width: 30vw;
-  height: 100vh;
-  overflow: auto;
-  transition: right 0.3s ease;
-  z-index: 1000;
-  padding: 1.5em;
-  margin: 0;
-  border-radius: 0;
+	position: absolute;
+	background-color: rgb(35 55 75 / 90%);
+	font-family: monospace;
+	color: #fff;
+	top: 0;
+	right: 0;
+	width: 30vw;
+	height: 100vh;
+	overflow: auto;
+	transition: right 0.3s ease;
+	z-index: 1000;
+	padding: 1.5em;
+	margin: 0;
+	border-radius: 0;
 }
 .sidebar-open .sidebar_icon {
-  margin-right: 1em;
+	margin-right: 1em;
 }
 .sidebar-header {
 	display: flex;
 	justify-content: flex-start;
-  align-items: center;
-  /* top: 0.25em; */
-  margin-bottom: 0.5em;
+	align-items: center;
+	/* top: 0.25em; */
+	margin-bottom: 0.5em;
 }
 .sidebar-header h2 {
-  margin: 0;
+	margin: 0;
 }
-
 
 .sidebar_icon {
 	color: white;
@@ -65,34 +63,138 @@
 }
 
 .direction-header {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  cursor: pointer;
-  margin-top: 2em;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	cursor: pointer;
+	margin-top: 2em;
 }
 .direction-header > .icon {
-  margin-right: 0.5em;
+	margin-right: 0.5em;
 }
 .direction-header > h3 {
-  margin: 0;
+	margin: 0;
 }
 hr {
-  /* background-color: rgb(255,255,255, 0.7); */
-  background-color: red;
-  color: blue;
+	/* background-color: rgb(255,255,255, 0.7); */
+	background-color: red;
+	color: blue;
 }
 .data-section li {
-  color: rgb(255,255,255, 0.7)
+	color: rgb(255, 255, 255, 0.7);
 }
 .data-section ol {
-  padding-left: 0;
-  list-style-position: inside;
-  max-height: 25vh;
-  overflow-y: auto;
+	padding-left: 0;
+	list-style-position: inside;
+	max-height: 15vh;
+	overflow-y: auto;
 }
 .data-icon {
-  margin-left: auto;
-  transform: rotateY(180deg);
-  font-size: 1.25em;
+	margin-left: auto;
+	transform: rotateY(180deg);
+	font-size: 1.25em;
+}
+
+.sidebar-open {
+	position: absolute;
+	background-color: rgb(35 55 75 / 90%);
+	font-family: monospace;
+	color: #fff;
+	top: 0;
+	right: 0;
+	width: 30vw;
+	height: 100vh;
+	overflow: auto;
+	transition: right 0.3s ease;
+	z-index: 1000;
+	padding: 1.5em;
+	margin: 0;
+	border-radius: 0;
+}
+.sidebar-open .sidebar_icon {
+	margin-right: 1em;
+}
+.sidebar-header {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	/* top: 0.25em; */
+	margin-bottom: 0.5em;
+}
+.sidebar-header h2 {
+	margin: 0;
+}
+
+.sidebar_icon {
+	color: white;
+	font-size: 1.5em;
+	cursor: pointer;
+	transition: all 0.3s ease-in-out;
+}
+
+.sidebar_icon:hover {
+	color: #ffa35c;
+}
+
+.direction-header {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	cursor: pointer;
+	margin-top: 2em;
+}
+.direction-header > .icon {
+	margin-right: 0.5em;
+}
+.direction-header > h3 {
+	margin: 0;
+}
+hr {
+	/* background-color: rgb(255,255,255, 0.7); */
+	background-color: red;
+	color: blue;
+}
+.data-section li {
+	color: rgb(255, 255, 255, 0.7);
+}
+.data-section ol {
+	padding-left: 0;
+	list-style-position: inside;
+	max-height: 25vh;
+	overflow-y: auto;
+}
+.data-icon {
+	margin-left: auto;
+	transform: rotateY(180deg);
+	font-size: 1.25em;
+}
+
+.emission-list {
+	list-style-type: none;
+	padding: 0;
+}
+
+.emission-item {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+	font-size: 1.2rem;
+}
+
+.emission-item .icon {
+	margin-right: 10px;
+	font-size: 1.5rem;
+}
+
+.progress-bar {
+	height: 8px;
+	background-color: lightgray;
+	border-radius: 4px;
+	margin-top: 5px;
+	width: 100%;
+	transition: width 0.3s ease;
+}
+
+.emission-item span {
+	flex: 1;
 }

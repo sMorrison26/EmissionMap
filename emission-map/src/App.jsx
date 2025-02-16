@@ -63,30 +63,6 @@ function App() {
 		});
 	};
 
-	//collect user coordinates
-	// const collectUserCoordinates = () => {
-	// 	if (navigator.geolocation) {
-	// 		navigator.geolocation.getCurrentPosition(
-	// 			(position) => {
-	// 				const userCoords = [
-	// 					position.coords.longitude,
-	// 					position.coords.latitude,
-	// 				];
-	// 				setCenter(userCoords);
-	// 				mapRef.current.flyTo({
-	// 					center: userCoords,
-	// 					zoom: INITIAL_ZOOM,
-	// 				});
-	// 			},
-	// 			(error) => {
-	// 				console.error("Error retrieving user coordinates:", error);
-	// 			}
-	// 		);
-	// 	} else {
-	// 		console.error("Geolocation is not supported by this browser.");
-	// 	}
-	// };
-
 	//collect the coordinates once the user clicks on their choice from the search bar
 	const handleRetrieve = (data) => {
 		console.log("data", data);
@@ -300,71 +276,6 @@ function App() {
 			console.error("Error fetching the directions:", error);
 		}
 	};
-
-
-
-
-  const handleDemo2 = async () => {
-    const origin = "40.73061,-73.935242"; // NYC start point
-    const destination = "40.77943,-73.963402"; // Destination
-    const mode = "transit"; // Transit mode
-  
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/directions?origin=${origin}&destination=${destination}&mode=${mode}`
-     );
-    
-  
-      const data = await response.json();
-      
-      if (data.status !== "OK") {
-        console.error("Error fetching directions:", data.status);
-        return;
-      }
-
-  
-      const steps = data.routes[0].legs[0].steps;
-      console.log("Steps:", steps);
-      setSteps(steps); // Store steps in state
-
-      // Extract encoded polyline
-      const encodedPolyline = data.routes[0].overview_polyline.points;
-
-      // Convert to GeoJSON
-      const geoJSONRoute = convertGooglePolylineToGeoJSON(encodedPolyline);
-
-      // Display on Mapbox
-      if (mapRef.current.getSource('route')) {
-        mapRef.current.removeLayer('route');
-        mapRef.current.removeSource('route');
-      }
-
-      mapRef.current.addSource('route', {
-        type: 'geojson',
-        data: geoJSONRoute,
-      });
-
-      mapRef.current.addLayer({
-        id: 'route',
-        type: 'line',
-        source: 'route',
-        paint: {
-          'line-color': '#FF5733', // Customize color
-          'line-width': 5,
-        },
-      });
-
-      // Zoom to fit the route
-      const bounds = new mapboxgl.LngLatBounds();
-      geoJSONRoute.geometry.coordinates.forEach(coord => bounds.extend(coord));
-
-      mapRef.current.fitBounds(bounds, { padding: 50 });
-
-
-    } catch (error) {
-      console.error("Error fetching Google Maps directions:", error);
-    }
-  };
   
   //CITIBIKE DATA POINTS
   const parseCitibikeData = (csvData) => {
@@ -387,7 +298,7 @@ function App() {
 };
 
   const findStationsWithinBoundingBox = (userLat, userLon, stations) => {
-    const radiusInDegrees = 0.0100;  // 1 mile radius approximation in degrees
+    const radiusInDegrees = 0.0145;  // 1 mile radius approximation in degrees
   
     const minLat = userLat - radiusInDegrees;
     const maxLat = userLat + radiusInDegrees;

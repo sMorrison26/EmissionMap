@@ -2,40 +2,52 @@
 
 
 .sidebar {
-	position: absolute;
-	background-color: rgb(35 55 75 / 90%);
-	font-family: monospace;
-	color: #fff;
-	top: 0;
-	right: 0;
-	width: 20px;
-	max-height: 100vh;
-	transition: left 0.3s ease;
-	z-index: 1000;
-	padding: 20px;
-	margin: 12px;
-	border-radius: 4px;
+  position: absolute;
+  background-color: rgb(35 55 75 / 90%);
+  font-family: monospace;
+  color: #fff;
+  top: 0;
+  right: 0;
+  /* width: fit-content; */
+  height: 100vh;
+  overflow: auto;
+  transition: left 0.3s ease;
+  z-index: 1000;
+  padding: 1.5em;
+  margin: 0;
+  border-radius: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .sidebar-open {
-	position: absolute;
-	background-color: rgb(35 55 75 / 90%);
-	font-family: monospace;
-	color: #fff;
-	top: 0;
-	right: 0;
-	width: 300px;
-	max-height: 100vh;
-	transition: right 0.3s ease;
-	z-index: 1000;
-	padding: 20px;
-	margin: 12px;
-	border-radius: 4px;
+  position: absolute;
+  background-color: rgb(35 55 75 / 90%);
+  font-family: monospace;
+  color: #fff;
+  top: 0;
+  right: 0;
+  width: 30vw;
+  height: 100vh;
+  overflow: auto;
+  transition: right 0.3s ease;
+  z-index: 1000;
+  padding: 1.5em;
+  margin: 0;
+  border-radius: 0;
+}
+.sidebar-open .sidebar_icon {
+  margin-right: 1em;
 }
 .sidebar-header {
 	display: flex;
 	justify-content: flex-start;
   align-items: center;
+  /* top: 0.25em; */
+  margin-bottom: 0.5em;
+}
+.sidebar-header h2 {
+  margin: 0;
 }
 
 
@@ -44,7 +56,6 @@
 	font-size: 1.5em;
 	cursor: pointer;
 	transition: all 0.3s ease-in-out;
-  margin-right: 1em;
 }
 
 .sidebar_icon:hover {

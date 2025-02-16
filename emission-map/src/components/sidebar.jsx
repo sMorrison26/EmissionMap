@@ -142,7 +142,7 @@ const Sidebar = ({ stepData }) => {
               <div
 									className="direction-header"
 									onClick={() => {
-										setShowWalking(!showWalking);
+										setShowTransit(!showTransit);
 									}}
 								>
 									<FontAwesomeIcon
